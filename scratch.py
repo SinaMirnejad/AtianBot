@@ -78,6 +78,8 @@ def main():
                     "GOOG",
                     "XLK"]
 
+        for s in sympbols:
+            newAvrages[s] = (0,0)
 
         oldAvrages = newAvrages
         newAvrages = {}
@@ -117,15 +119,15 @@ def main():
 
         for s in sympbols:
 
-            T = oldAvrages[s];
-            TS = oldAvrages[s];
+            T = oldAvrages[s][0];
+            TS = oldAvrages[s][1];
 
-            if newAvrages[s] < TS:
+            if newAvrages[s][0] < TS:
                 write_to_exchange(exchange,
                                   {"type": "add", "order_id": id, "symbol": s,
                                    "dir": "SELL", "price": newAvrages[s], "size": 1})
                 id += 1
-            if newAvrages[s] > T:
+            if newAvrages[s][1] > T:
                 write_to_exchange(exchange,
                                   {"type": "add", "order_id": id, "symbol": s,
                                    "dir": "BUY", "price": newAvrages[s], "size": 1})
