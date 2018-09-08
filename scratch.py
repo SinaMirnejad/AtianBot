@@ -117,7 +117,7 @@ def main():
             average_priceS = total_priceS / price_countS
 
             price[symbol].append([time.time(), average_price])
-            newAvrages[symbol] = (average_pric,average_priceS)
+            newAvrages[symbol] = (average_priceS,average_priceS)
 
 
 
