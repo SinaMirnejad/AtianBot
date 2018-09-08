@@ -115,7 +115,7 @@ def main():
             print(symbol, average_price, moving_average(price[symbol], 15), moving_average(price[symbol], 60))
 
 
-        for s in symbol:
+        for s in sympbols:
 
             T = oldAvrages[s];
             TS = oldAvrages[s];
