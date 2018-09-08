@@ -125,12 +125,12 @@ def main():
                 write_to_exchange(exchange,
                                   {"type": "add", "order_id": id, "symbol": s,
                                    "dir": "SELL", "price": newAvrages[s], "size": 1})
-                id++;
+                id += 1
             if newAvrages[s] > T:
                 write_to_exchange(exchange,
                                   {"type": "add", "order_id": id, "symbol": s,
                                    "dir": "BUY", "price": newAvrages[s], "size": 1})
-                id++;
+                id += 1
 
         #system('clear')
         #print(json.dumps(price, indent=4, sort_keys=True))
