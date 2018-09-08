@@ -113,8 +113,12 @@ def main():
                 total_priceS += s[0] * s[1]
                 price_countS += s[1]
 
+            price_count += 1
+            price_countS += 1
             average_price = total_price / price_count
             average_priceS = total_priceS / price_countS
+
+
 
             price[symbol].append([time.time(), average_price])
             newAvrages[symbol] = (average_priceS,average_priceS)
