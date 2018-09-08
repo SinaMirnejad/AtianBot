@@ -69,6 +69,11 @@ def main():
 
     MyAvragePrice={}
 
+    for s in sympbols:
+        newAvrages[s] = (0, 0)
+
+    oldAvrages = newAvrages
+
     while 1 == 1:
         sympbols = ["BOND",
                     "BABZ",
@@ -78,11 +83,11 @@ def main():
                     "GOOG",
                     "XLK"]
 
+        oldAvrages = newAvrages
         for s in sympbols:
             newAvrages[s] = (0,0)
 
-        oldAvrages = newAvrages
-        newAvrages = {}
+
         from_exchange = read_from_exchange(exchange)
         #print(from_exchange)
 
