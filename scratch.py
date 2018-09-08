@@ -60,11 +60,27 @@ def moving_average(history, time_length):
     return total_price / price_count
 
 def main():
+    id = 0
     exchange = connect()
     write_to_exchange(exchange, {"type": "hello", "team": team_name.upper()})
 
-    while 1 == 1:
+    newAvrages= {}
+    oldAvrages= {}
 
+    MyAvragePrice={}
+
+    while 1 == 1:
+        sympbols = ["BOND",
+                    "BABZ",
+                    "BABA",
+                    "AAPL",
+                    "MSFT",
+                    "GOOG",
+                    "XLK"]
+
+
+        oldAvrages = newAvrages
+        newAvrages = {}
         from_exchange = read_from_exchange(exchange)
         #print(from_exchange)
 
@@ -77,15 +93,44 @@ def main():
 
             total_price = 0
             price_count = 0
+
+            total_priceS = 0
+            price_countS = 0
+
             for s in from_exchange["sell"]:
                 total_price += s[0] * s[1]
                 price_count += s[1]
             for s in from_exchange["buy"]:
-                total_price += s[0] * s[1]
-                price_count += s[1]
+                total_priceS += s[0] * s[1]
+                price_countS += s[1]
+
             average_price = total_price / price_count
+            average_priceS = total_priceS / price_countS
+
             price[symbol].append([time.time(), average_price])
+            newAvrages[symbol] = (average_pric,average_priceS)
+
+
+
             print(symbol, average_price, moving_average(price[symbol], 15), moving_average(price[symbol], 60))
+
+
+        T  = oldAvrages[s];
+        TS = oldAvrages[s];
+
+
+
+        for s in symbol:
+            if newAvrages[s] < TS:
+                write_to_exchange(exchange,
+                                  {"type": "add", "order_id": id, "symbol": s,
+                                   "dir": "SELL", "price": newAvrages[s], "size": 1})
+                id++;
+            if newAvrages[s] > T:
+                write_to_exchange(exchange,
+                                  {"type": "add", "order_id": id, "symbol": s,
+                                   "dir": "BUY", "price": newAvrages[s], "size": 1})
+                id++;
 
         #system('clear')
         #print(json.dumps(price, indent=4, sort_keys=True))
