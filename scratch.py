@@ -69,19 +69,21 @@ def main():
 
     MyAvragePrice={}
 
+    sympbols = ["BOND",
+                "BABZ",
+                "BABA",
+                "AAPL",
+                "MSFT",
+                "GOOG",
+                "XLK"]
+
     for s in sympbols:
         newAvrages[s] = (0, 0)
+
 
     oldAvrages = newAvrages
 
     while 1 == 1:
-        sympbols = ["BOND",
-                    "BABZ",
-                    "BABA",
-                    "AAPL",
-                    "MSFT",
-                    "GOOG",
-                    "XLK"]
 
         oldAvrages = newAvrages
         for s in sympbols:
