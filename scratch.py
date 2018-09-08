@@ -85,9 +85,7 @@ def main():
                 price_count += s[1]
             average_price = total_price / price_count
             price[symbol].append([time.time(), average_price])
-
-            if symbol == "XLK":
-                print(symbol, average_price, moving_average(price[symbol], 15), moving_average(price[symbol], 60))
+            print(symbol, average_price, moving_average(price[symbol], 15), moving_average(price[symbol], 60))
 
         #system('clear')
         #print(json.dumps(price, indent=4, sort_keys=True))
