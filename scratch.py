@@ -121,7 +121,10 @@ def main():
 
 
 
-            print(symbol, average_price, moving_average(price[symbol], 15), moving_average(price[symbol], 60))
+            for s in sympbols:
+                print(s, average_price, average_priceS)
+
+            #print(symbol, average_price, moving_average(price[symbol], 15), moving_average(price[symbol], 60))
 
 
         for s in sympbols:
