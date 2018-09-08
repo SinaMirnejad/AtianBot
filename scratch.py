@@ -10,6 +10,7 @@ from __future__ import print_function
 import sys
 import socket
 import json
+import time
 from os import system, name
 
 # ~~~~~============== CONFIGURATION  ==============~~~~~
@@ -29,6 +30,7 @@ prod_exchange_hostname="production"
 port=25000 + (test_exchange_index if test_mode else 0)
 exchange_hostname = "test-exch-" + team_name if test_mode else prod_exchange_hostname
 
+price = {"AAPL"	: [], "BABA": [], "BABZ": [], "BOND": [], "GOOG": [], "MSFT": [], "XLK": []}
 
 # ~~~~~============== NETWORKING CODE ==============~~~~~
 def connect():
@@ -46,59 +48,49 @@ def read_from_exchange(exchange):
     return json.loads(exchange.readline())
 
 
-# ~~~~~============== MAIN LOOP ==============~~~~~
+def moving_average(history, time_length):
+    cutoff = time.time() - time_length
+    total_price = 0
+    price_count = 0
+    for i in range(len(history) - 1, -1, -1):
+        if history[i][0] < cutoff and price_count != 0:
+            return total_price / price_count
+        total_price += history[i][1]
+        price_count += 1
+    return total_price / price_count
 
 def main():
     exchange = connect()
     write_to_exchange(exchange, {"type": "hello", "team": team_name.upper()})
 
-    book = {}
-    price = {}
-
-    AVOld = {}
-    AVnew = {}
-
-    from_exchange = read_from_exchange(exchange)
-
     while 1 == 1:
 
-        #calculating average prices
+        from_exchange = read_from_exchange(exchange)
+        #print(from_exchange)
 
         if from_exchange["type"] == "book":
 
+            symbol = from_exchange["symbol"]
 
-            book[from_exchange["symbol"]] = from_exchange
+            while len(price[symbol]) > 0 and price[symbol][0][0] < time.time() - 60:
+                price[symbol].pop(0)
 
-            p = 0
-            pc = 0
-
+            total_price = 0
+            price_count = 0
             for s in from_exchange["sell"]:
-                p += s[0] * s[1]
-                pc += s[1]
-
+                total_price += s[0] * s[1]
+                price_count += s[1]
             for s in from_exchange["buy"]:
-                p += s[0] * s[1]
-                pc += s[1]
+                total_price += s[0] * s[1]
+                price_count += s[1]
+            average_price = total_price / price_count
+            price[symbol].append([time.time(), average_price])
 
-            price[from_exchange["symbol"]] = p / pc
+            if symbol == "XLK":
+                print(symbol, average_price, moving_average(price[symbol], 15), moving_average(price[symbol], 60))
 
-            print(from_exchange["symbol"], price[from_exchange["symbol"]])
-            print(from_exchange["type"], from_exchange, file=sys.stderr)
-
-
-        #trading
-        #while  not AVOld == -1 and not AVnew == -1: pass
-        # Do trade based on Average values trade
-
-
-
-        # A common mistake people make is to call write_to_exchange() > 1
-        # time for every read_from_exchange() response.
-        # Since many write messages generate marketdata, this will cause an
-        # exponential explosion in pending messages. Please, don't do that!
         #system('clear')
-        #for page in book:
-            #print(book[page], file=sys.stderr)
+        #print(json.dumps(price, indent=4, sort_keys=True))
 
 
 if __name__ == "__main__":
