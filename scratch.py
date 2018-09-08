@@ -115,12 +115,11 @@ def main():
             print(symbol, average_price, moving_average(price[symbol], 15), moving_average(price[symbol], 60))
 
 
-        T  = oldAvrages[s];
-        TS = oldAvrages[s];
-
-
-
         for s in symbol:
+
+            T = oldAvrages[s];
+            TS = oldAvrages[s];
+
             if newAvrages[s] < TS:
                 write_to_exchange(exchange,
                                   {"type": "add", "order_id": id, "symbol": s,
